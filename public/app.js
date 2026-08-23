@@ -493,7 +493,7 @@ $('#micBtn').addEventListener('click', async () => {
       stream.getTracks().forEach((t) => t.stop())
       clearInterval(recTimer)
     }
-    mediaRecorder.start()
+    mediaRecorder.start(1000) // timeslice: dispara dataavailable cada 1s (evita blob vacío)
     setRecordingUI(true)
     recTimer = setInterval(() => {
       recSeconds++
@@ -537,6 +537,7 @@ $('#recSendBtn').addEventListener('click', async () => {
   }
   const recMime = blob.type || 'audio/webm'
   const recExt = recMime.includes('mp4') ? 'm4a' : recMime.includes('ogg') ? 'ogg' : 'webm'
+  console.log('[audio] grabación:', recMime, blob.size, 'bytes')
   const fd = new FormData()
   fd.append('file', blob, 'nota-de-voz.' + recExt)
   fd.append('jid', activeJid)
@@ -544,9 +545,11 @@ $('#recSendBtn').addEventListener('click', async () => {
   try {
     const r = await fetch('/api/send-media', { method: 'POST', body: fd })
     const j = await r.json()
+    console.log('[audio] respuesta:', r.status, JSON.stringify(j))
     if (!j.ok) showToast('No se pudo enviar: ' + j.error)
     else refreshMessages()
   } catch (e) {
+    console.error('[audio] error:', e)
     showToast('Error: ' + e.message)
   }
 })
