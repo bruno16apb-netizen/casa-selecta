@@ -66,6 +66,7 @@ function readData() {
       },
       schedules: [],
       conversations: {},
+      lidMap: {},
     }
   }
 }
@@ -86,6 +87,15 @@ function normalizeTo(number) {
 }
 function jidFromWaId(waId) {
   return normalizeTo(waId) + '@c.us'
+}
+// Los mensajes entrantes de Meta pueden llegar con un LID (identificador ligero)
+// en vez del número de teléfono (por privacidad del usuario). Para no crear chats
+// duplicados, mapeamos el LID al número real usando data.lidMap.
+function canonicalJid(waId) {
+  const n = normalizeTo(waId)
+  const map = data.lidMap || {}
+  if (map[n]) return normalizeTo(map[n]) + '@c.us'
+  return n + '@c.us'
 }
 function numberFromJid(jid) {
   return String(jid).split('@')[0]
@@ -508,7 +518,7 @@ app.post('/webhook', async (req, res) => {
 async function handleIncoming(msg, contacts) {
   const from = msg.from
   if (!from) return
-  const jid = jidFromWaId(from)
+  const jid = canonicalJid(from)
   let name = ''
   const contact = contacts.find((c) => String(c.wa_id) === String(from))
   if (contact && contact.profile && contact.profile.name) name = contact.profile.name
