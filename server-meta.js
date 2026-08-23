@@ -83,6 +83,9 @@ const data = readData()
 function normalizeTo(number) {
   let n = String(number || '').replace(/\D/g, '')
   n = n.replace(/^0+/, '')
+  // Paraguay (+595): si viene con el 0 de troncal (ej. 595 0 994 661975),
+  // lo quitamos para unificar con el formato sin 0 (595 994 661975).
+  if (/^5950\d{9}$/.test(n)) n = '595' + n.slice(4)
   return n
 }
 function jidFromWaId(waId) {
