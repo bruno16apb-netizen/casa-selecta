@@ -346,6 +346,20 @@ app.get('/api/status', (_req, res) => {
   res.json({ status: state.status, qr: state.qr, me: state.me, error: state.error })
 })
 
+// Diagnóstico: estado de ffmpeg (necesario para convertir notas de voz)
+app.get('/api/debug', (_req, res) => {
+  const info = { ffmpegPath: String(FFMPEG || 'null'), ffmpegOk: false, ffmpegOutput: '' }
+  execFile(String(FFMPEG || 'ffmpeg'), ['-version'], { timeout: 8000 }, (err, stdout, stderr) => {
+    if (err) {
+      info.ffmpegOutput = String(stderr || err.message).slice(0, 300)
+      return res.json(info)
+    }
+    info.ffmpegOk = true
+    info.ffmpegOutput = String(stdout).split('\n')[0] || ''
+    res.json(info)
+  })
+})
+
 app.get('/api/events', (_req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' })
   res.write(
