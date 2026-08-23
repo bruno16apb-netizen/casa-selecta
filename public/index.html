@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsBot Web</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ Pantalla de QR ============ -->
+  <div id="qrScreen" class="qr-screen">
+    <div class="qr-header">
+      <span class="qr-logo"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
+      <span>WhatsBot Web</span>
+    </div>
+    <div class="qr-card">
+      <h1>Usá WhatsApp en tu computadora</h1>
+      <p class="muted">Vincular tu cuenta escaneando el código QR</p>
+      <ol class="steps">
+        <li>Abrí WhatsApp en tu teléfono</li>
+        <li>Tocá <b>Menú</b> o <b>Ajustes</b></li>
+        <li>Tocá <b>Dispositivos vinculados</b></li>
+        <li>Tocá <b>Vincular dispositivo</b> y escaneá</li>
+      </ol>
+      <div class="qr-holder">
+        <div id="qrBox"><img id="qrImg" alt="QR" /></div>
+        <div id="qrLoading" class="qr-loading">Cargando código…</div>
+      </div>
+      <span id="statusPill" class="pill connecting">Conectando…</span>
+    </div>
+  </div>
+
+  <!-- ============ Aplicación (estilo WhatsApp Web) ============ -->
+  <div id="app" class="app hidden">
+
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <div class="me">
+          <div class="avatar" id="meAvatar">¿</div>
+          <div class="me-info">
+            <div class="me-name" id="meName">Mi cuenta</div>
+            <div class="me-number" id="meNumber"></div>
+          </div>
+        </div>
+        <div class="header-icons">
+          <button class="icon-btn" id="newChatBtn" title="Nuevo chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button>
+          <button class="icon-btn" id="groupBtn" title="Grupo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
+          <button class="icon-btn" id="settingsBtn" title="Configuración"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+          <button class="icon-btn" id="themeToggle" title="Tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+          <button class="icon-btn" id="logoutBtn" title="Cerrar sesión"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg></button>
+        </div>
+      </header>
+
+      <div class="search">
+        <input id="searchInput" type="text" placeholder="Buscar o empezar un chat nuevo" />
+      </div>
+
+      <ul class="chat-list" id="chatList"></ul>
+    </aside>
+
+    <main class="chat">
+      <header class="chat-header">
+        <button class="icon-btn" id="backBtn" title="Volver a la lista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+        <div class="avatar chat-avatar" id="chatAvatar">#</div>
+        <div class="chat-title">
+          <div id="chatName">WhatsApp</div>
+          <div class="chat-status" id="chatStatus">conectando…</div>
+        </div>
+        <button class="icon-btn chat-menu-btn" id="chatMenuBtn" title="Más opciones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+      </header>
+
+      <div class="messages" id="messages">
+        <div class="empty-chat" id="emptyChat">
+          <div class="empty-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+          <p>Seleccioná un chat para empezar a chatear</p>
+        </div>
+      </div>
+
+      <footer class="composer" id="composer">
+        <button class="icon-btn attach-btn" id="attachBtn" title="Adjuntar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+        <button class="icon-btn mic-btn" id="micBtn" title="Grabar audio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
+        <div class="composer-input">
+          <input id="msgInput" type="text" placeholder="Escribí un mensaje" disabled />
+        </div>
+        <div class="rec-ui" id="recUI">
+          <span class="rec-dot"></span>
+          <span id="recTime">00:00</span>
+          <button class="icon-btn" id="recCancelBtn" title="Cancelar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <button class="send-btn rec-send" id="recSendBtn" title="Enviar audio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
+        </div>
+        <button id="sendBtn" class="send-btn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
+      </footer>
+    </main>
+
+  </div>
+
+  <!-- ============ Modal de Configuración ============ -->
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>Configuración</h2>
+        <button class="icon-btn" id="closeSettingsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+
+      <section class="setting-group">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic ic-h3" aria-hidden="true"><rect width="16" height="10" x="4" y="9" rx="2"/><path d="M12 9V4"/><path d="M8 4h8"/><circle cx="9" cy="13.5" r="0.8"/><circle cx="15" cy="13.5" r="0.8"/></svg> Bot con API</h3>
+        <p class="muted">Conectá el bot a una API estilo OpenAI (OpenAI, OpenRouter, Groq, Ollama…).</p>
+
+        <label class="switch-row">
+          <input id="botEnabled" type="checkbox" />
+          <span>Activar bot automático</span>
+        </label>
+
+        <label class="field-label" for="botEndpoint">Endpoint (URL base)</label>
+        <input id="botEndpoint" type="text" placeholder="https://api.openai.com/v1" />
+
+        <label class="field-label" for="botApiKey">API Key</label>
+        <input id="botApiKey" type="password" placeholder="sk-..." />
+
+        <label class="field-label" for="botModel">Modelo</label>
+        <input id="botModel" type="text" placeholder="gpt-4o-mini" />
+
+        <label class="field-label" for="botPrompt">Instrucciones del bot (system prompt)</label>
+        <textarea id="botPrompt" rows="3" placeholder="Sos el asistente de mi negocio. Respondé amable y en español."></textarea>
+
+        <button id="saveBotBtn" class="btn btn-primary">Guardar bot</button>
+      </section>
+
+      <section class="setting-group">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic ic-h3" aria-hidden="true"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg> Auto-respuesta simple</h3>
+        <p class="muted">Se usa solo si el bot con API está desactivado.</p>
+        <label class="switch-row">
+          <input id="autoReplyToggle" type="checkbox" />
+          <span>Activar respuesta automática</span>
+        </label>
+        <label class="field-label" for="autoReplyText">Texto de respuesta</label>
+        <textarea id="autoReplyText" rows="2" placeholder="¡Hola! Gracias por escribir."></textarea>
+        <button id="saveSettingsBtn" class="btn btn-primary">Guardar</button>
+      </section>
+
+      <section class="setting-group">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic ic-h3" aria-hidden="true"><circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"/><circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"/><circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"/><circle cx="6.5" cy="12.5" r="0.5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg> Apariencia</h3>
+        <label class="switch-row">
+          <input id="themeSwitch" type="checkbox" />
+          <span>Modo claro</span>
+        </label>
+      </section>
+    </div>
+  </div>
+
+  <!-- ============ Modal Nuevo Chat ============ -->
+  <div id="newChatModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>Nuevo chat</h2>
+        <button class="icon-btn" id="closeNewChatBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <section class="setting-group">
+        <p class="muted">Escribí el número con código de país, sin + ni espacios.</p>
+        <label class="field-label" for="newChatNumber">Número de teléfono</label>
+        <input id="newChatNumber" type="text" placeholder="Ej: 5491112345678" autocomplete="off" />
+        <label class="field-label" for="newChatName">Nombre (opcional)</label>
+        <input id="newChatName" type="text" placeholder="Ej: Juan Pérez" autocomplete="off" />
+        <button id="startChatBtn" class="btn btn-primary">Abrir chat</button>
+      </section>
+    </div>
+  </div>
+
+  <!-- ============ Modal Crear Grupo ============ -->
+  <div id="groupModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>Crear grupo</h2>
+        <button class="icon-btn" id="closeGroupBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <section class="setting-group">
+        <label class="field-label" for="groupName">Nombre del grupo</label>
+        <input id="groupName" type="text" placeholder="Ej: Equipo de trabajo" autocomplete="off" />
+
+        <div class="gp-participants-section">
+          <label class="field-label">Participantes</label>
+          <div id="gpSelectedChips" class="gp-chips"></div>
+
+          <div class="gp-manual-add">
+            <input id="gpManualNumber" type="text" placeholder="Número con código de país (ej: 5491112345678)" autocomplete="off" />
+            <button id="gpAddManualBtn" class="btn btn-sm">Agregar</button>
+          </div>
+
+          <div class="gp-search">
+            <input id="gpSearchInput" type="text" placeholder="Buscar en tus contactos…" autocomplete="off" />
+          </div>
+
+          <div id="gpContactList" class="gp-contact-list"></div>
+        </div>
+
+        <button id="createGroupBtn" class="btn btn-primary">Crear grupo</button>
+      </section>
+    </div>
+  </div>
+
+  <!-- ============ Menús flotantes ============ -->
+  <div id="attachMenu" class="popup hidden">
+    <button class="popup-item" id="sendPhotoBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Foto</button>
+    <button class="popup-item" id="sendAudioBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg> Audio</button>
+  </div>
+
+  <div id="chatMenu" class="popup hidden">
+    <button class="popup-item" id="blockBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg> Bloquear</button>
+    <button class="popup-item" id="unblockBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg> Desbloquear</button>
+    <button class="popup-item danger" id="deleteChatBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Eliminar chat</button>
+  </div>
+
+  <!-- ============ Visor de fotos ============ -->
+  <div id="lightbox" class="lightbox hidden">
+    <button class="icon-btn lightbox-close" id="lightboxClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ic" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <img id="lightboxImg" alt="Foto" />
+  </div>
+
+  <input type="file" id="fileInput" accept="image/*,audio/*" hidden />
+
+  <script src="app.js"></script>
+</body>
+</html>

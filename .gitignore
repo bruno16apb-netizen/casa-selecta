@@ -1,0 +1,17 @@
+node_modules/
+*.log
+*.pid
+data.json
+media/
+uploads/
+wwebjs_auth/
+auth.backup.*/
+server.js.bak*
+.wwebjs_cache/
+# versiones anteriores del bot (ya no se usan con Meta API)
+server.js
+server-baileys.js
+qr-server.js
+qr-server.js
+run.sh
+.DS_Store
