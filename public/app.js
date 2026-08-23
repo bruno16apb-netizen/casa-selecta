@@ -304,7 +304,8 @@ $('#startChatBtn').addEventListener('click', () => {
   const raw = $('#newChatNumber').value.trim()
   const name = $('#newChatName').value.trim()
   if (!raw) { showToast('Escribí un número'); return }
-  const digits = raw.replace(/\D/g, '').replace(/^0+/, '')
+  let digits = raw.replace(/\D/g, '').replace(/^0+/, '')
+  if (/^5950\d{9}$/.test(digits)) digits = '595' + digits.slice(4)
   if (!digits) { showToast('Número inválido'); return }
   activeJid = digits + '@c.us'
   $('#app').classList.add('chat-open')

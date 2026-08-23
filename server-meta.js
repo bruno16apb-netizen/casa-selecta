@@ -367,7 +367,7 @@ app.get('/api/messages', (req, res) => {
 
 app.post('/api/send', async (req, res) => {
   const { jid, number, text } = req.body || {}
-  const target = jid || (number ? jidFromWaId(number) : null)
+  const target = canonicalJid(jid || number)
   const to = target ? numberFromJid(target) : null
   if (!to || !text) return res.status(400).json({ ok: false, error: 'Faltan datos' })
   if (state.status !== 'connected') return res.status(409).json({ ok: false, error: 'API no configurada' })
@@ -422,7 +422,7 @@ app.delete('/api/schedules/:id', (req, res) => {
 // ------------------------------------------------------------------ media (foto / audio)
 app.post('/api/send-media', upload.single('file'), async (req, res) => {
   const { jid, number, type, caption } = req.body || {}
-  const target = jid || (number ? jidFromWaId(number) : null)
+  const target = canonicalJid(jid || number)
   const to = target ? numberFromJid(target) : null
   const file = req.file
   const cleanup = () => {
