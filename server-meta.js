@@ -189,9 +189,10 @@ async function graphPost(pathAndQuery, payload) {
 }
 
 // Sube un archivo a Meta y devuelve el media id
-async function uploadMediaToMeta(buffer, filename, mimeType) {
+async function uploadMediaToMeta(buffer, filename, mimeType, mediaType) {
   const form = new FormData()
   form.append('messaging_product', 'whatsapp')
+  form.append('type', mediaType || 'image')
   form.append('file', new Blob([buffer], { type: mimeType }), filename)
   const res = await fetch(`${GRAPH_BASE}/${cfg.phoneNumberId}/media`, {
     method: 'POST',
@@ -467,7 +468,7 @@ app.post('/api/send-media', upload.single('file'), async (req, res) => {
       filename = /\.[a-z0-9]+$/i.test(file.originalname || '') ? file.originalname : 'imagen.' + ext
     }
 
-    const mediaId = await uploadMediaToMeta(buf, filename, mime)
+    const mediaId = await uploadMediaToMeta(buf, filename, mime, isAudio ? 'audio' : 'image')
     if (isAudio) await sendAudio(to, mediaId)
     else await sendImage(to, mediaId, caption)
 
