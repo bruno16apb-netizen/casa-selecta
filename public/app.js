@@ -535,7 +535,7 @@ $('#recSendBtn').addEventListener('click', async () => {
     showToast('Grabación vacía')
     return
   }
-  const recMime = mediaRecorder.mimeType || 'audio/webm'
+  const recMime = blob.type || 'audio/webm'
   const recExt = recMime.includes('mp4') ? 'm4a' : recMime.includes('ogg') ? 'ogg' : 'webm'
   const fd = new FormData()
   fd.append('file', blob, 'nota-de-voz.' + recExt)
